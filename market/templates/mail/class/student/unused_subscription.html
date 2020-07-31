@@ -1,0 +1,12 @@
+{% extends "mail_templated/base.tpl" %}
+{% load humanize %}
+
+{% block subject %}
+Your not use subscription
+{% endblock %}
+
+{% block body %}
+Dear {{ user.first_name | capfirst }}, please add your class to schedule.
+
+{% include 'mailer/_signature.html' %}
+{% endblock %}

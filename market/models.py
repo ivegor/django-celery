@@ -104,6 +104,8 @@ class Subscription(ProductContainer):
 
     first_lesson_date = models.DateTimeField('Date of the first lesson', editable=False, null=True)
 
+    last_notification_dt_about_unused = models.DateTimeField(editable=False, null=True)
+
     def __str__(self):
         return self.name_for_user
 

@@ -7,6 +7,7 @@ from mailer.owl import Owl
 class_scheduled = Signal(providing_args=['instance'])  # class is just scheduled
 class_cancelled = Signal(providing_args=['instance', 'src'])  # class is just cancelled
 subscription_deactivated = Signal(providing_args=['user', 'instance'])
+unused_subscription = Signal(providing_args=['crm', 'instance'])
 
 
 @receiver(subscription_deactivated, dispatch_uid='write_log_entry')
@@ -78,5 +79,19 @@ def notify_teacher_class_is_cancelled(sender, **kwargs):
         },
         to=[c.timeline.teacher.user.email],
         timezone=c.timeline.teacher.user.crm.timezone,
+    )
+    owl.send()
+
+
+@receiver(unused_subscription, dispatch_uid='notify_student_about_unused_subscription')
+def notify_student_about_unused_subscription(sender, **kwargs):
+    crm = kwargs['crm']
+    owl = Owl(
+        template='mail/class/student/unused_subscription.html',
+        ctx={
+            'crm': crm,
+        },
+        to=[crm.user.email],
+        timezone=crm.timezone,
     )
     owl.send()
